@@ -24,6 +24,9 @@ public class User {
 	private String cpf;
 
 	@Column(nullable = false)
+	private String password;
+
+	@Column(nullable = false)
 	private String age;
 
 	@Column(nullable = false)
@@ -77,5 +80,12 @@ public class User {
 		this.gender = gender;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 }
