@@ -24,7 +24,7 @@ public class Car {
 	private String plate;
 
 	@Column(nullable = false)
-	private Integer bench;
+	private String bench;
 
 	@ManyToOne
 	private User user;
@@ -64,11 +64,11 @@ public class Car {
 		this.plate = plate;
 	}
 
-	public Integer getBench() {
+	public String getBench() {
 		return bench;
 	}
 
-	public void setBench(Integer bench) {
+	public void setBench(String bench) {
 		this.bench = bench;
 	}
 }

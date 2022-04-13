@@ -1,9 +1,8 @@
 package br.com.uniride.controller;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
-
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.uniride.dao.UserRepository;
-import br.com.uniride.dao.SessionRepository;
-import br.com.uniride.model.Session;
 import br.com.uniride.model.User;
 
 @RestController
@@ -29,9 +26,6 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private SessionRepository sessionRepository;
 
 	private String response = "success";
 
@@ -45,6 +39,8 @@ public class UserController {
 	@PostMapping
 	public @ResponseBody String create(@RequestParam JSONObject data) {
 
+		System.out.println("teste");
+		
 		User user = new User();
 		user.setFullname(data.get("fullname").toString());
 		user.setMail(data.get("mail").toString());
@@ -113,25 +109,14 @@ public class UserController {
 	 */
 
 	@PostMapping(path = "/login")
-	public @ResponseBody String login(@RequestParam JSONObject data) {
+	public @ResponseBody User login(HttpServletRequest req, @RequestParam JSONObject data) {
 
 		String cpf_mail = data.get("cpf_mail").toString();
 		String password = data.get("password").toString();
-		Session session = new Session();
 
 		User user = userRepository.authenticate(cpf_mail, password);
 
-		if (user != null) {
-
-			session.setUser(user);
-			session.setLogged_at(Calendar.getInstance().getTime());
-			session.setLast_action_at(Calendar.getInstance().getTime());
-			session.setOs("MacOSX");
-			session.setAuth_key((password + cpf_mail).getBytes(StandardCharsets.UTF_8).toString());
-			sessionRepository.save(session);
-		}
-
-		return session.getAuth_key();
+		return user;
 
 	}
 }
