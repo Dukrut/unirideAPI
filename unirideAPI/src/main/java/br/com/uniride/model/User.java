@@ -31,6 +31,9 @@ public class User {
 
 	@Column(nullable = false)
 	private String gender;
+	
+	@Column(nullable = false)
+	private Boolean is_driver;
 
 	public Integer getId() {
 		return id;
