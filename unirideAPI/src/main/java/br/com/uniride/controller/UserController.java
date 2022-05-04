@@ -73,7 +73,7 @@ public class UserController {
 	 */
 
 	@GetMapping
-	public @ResponseBody Optional<User> get(@RequestParam("id") int id) {
+	public @ResponseBody Optional<User> get(@RequestParam("id") Long id) {
 
 		return userRepository.findById(id);
 
@@ -86,7 +86,7 @@ public class UserController {
 	 * @return String
 	 */
 	@DeleteMapping
-	public @ResponseBody String delete(@RequestParam("id") int id) {
+	public @ResponseBody String delete(@RequestParam("id") Long id) {
 
 		userRepository.deleteById(id);
 		return response;
