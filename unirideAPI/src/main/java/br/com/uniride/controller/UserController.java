@@ -2,7 +2,7 @@ package br.com.uniride.controller;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
-
+import java.util.Map;
 import java.util.Optional;
 
 import org.json.JSONObject;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +24,7 @@ import br.com.uniride.model.Session;
 import br.com.uniride.model.User;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/users")
 public class UserController {
 
@@ -113,8 +114,8 @@ public class UserController {
 	 */
 
 	@PostMapping(path = "/login")
-	public @ResponseBody String login(@RequestParam JSONObject data) {
-
+	public @ResponseBody String login(@RequestBody Map<String, Object> data) {
+		
 		String cpf_mail = data.get("cpf_mail").toString();
 		String password = data.get("password").toString();
 		Session session = new Session();
