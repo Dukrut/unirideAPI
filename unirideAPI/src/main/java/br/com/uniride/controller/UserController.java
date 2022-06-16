@@ -5,13 +5,12 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Optional;
 
-import org.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,9 +43,39 @@ public class UserController {
 	 */
 
 	@PostMapping
-	public @ResponseBody String create(@RequestParam JSONObject data) {
+	public @ResponseBody String create(@RequestBody Map<String, Object> data) {
+		
+		System.out.println(data);
 
 		User user = new User();
+		user.setFullname(data.get("fullname").toString());
+		user.setMail(data.get("mail").toString());
+		user.setCpf(data.get("cpf").toString());
+		user.setPassword(data.get("password").toString());
+		user.setGender(data.get("gender").toString());
+		user.setAge(data.get("age").toString());
+
+		try {
+			userRepository.save(user);
+		} catch (Exception e) {
+
+			return e.getMessage();
+
+		}
+
+		return response;
+
+	}
+	
+	/**
+	 * Atualiza um usuário
+	 * @param data
+	 * @return
+	 */
+	@PutMapping
+	public @ResponseBody String update(@RequestBody Map<String, Object> data) {
+
+		User user = userRepository.findById(Long.parseLong(data.get("id").toString())).get();
 		user.setFullname(data.get("fullname").toString());
 		user.setMail(data.get("mail").toString());
 		user.setCpf(data.get("cpf").toString());
@@ -114,13 +143,14 @@ public class UserController {
 	 */
 
 	@PostMapping(path = "/login")
-	public @ResponseBody String login(@RequestBody Map<String, Object> data) {
+	public @ResponseBody User login(@RequestBody Map<String, Object> data) {
 		
-		String cpf_mail = data.get("cpf_mail").toString();
+		System.out.println(data);
+		String login = data.get("login").toString();
 		String password = data.get("password").toString();
 		Session session = new Session();
 
-		User user = userRepository.authenticate(cpf_mail, password);
+		User user = userRepository.authenticate(login, password);
 
 		if (user != null) {
 
@@ -128,11 +158,11 @@ public class UserController {
 			session.setLogged_at(Calendar.getInstance().getTime());
 			session.setLast_action_at(Calendar.getInstance().getTime());
 			session.setOs("MacOSX");
-			session.setAuth_key((password + cpf_mail).getBytes(StandardCharsets.UTF_8).toString());
+			session.setAuth_key((password + login).getBytes(StandardCharsets.UTF_8).toString());
 			sessionRepository.save(session);
 		}
 
-		return session.getAuth_key();
+		return user;
 
 	}
 }
